@@ -5,7 +5,6 @@ const { Table } = require('console-table-printer');
 var util = require("util");
 var connection = require("./config/connection.js");
 var { promisify } = require("util");
-// orm = require("./config/orm");
 
 var orm = require("./config/orm");
 var connectionQuery = require("./config/connection");
@@ -17,7 +16,7 @@ const updateEmployeeRole = require('./assets/lib/updateemployeerole');
 const addEmployee = require('./assets/lib/addemployee');
 const updateEmployeeManager = require('./assets/lib/updateemployeemanager');
 const addRole = require('./assets/lib/addrole');
-const { isNumber, isString } = require("util");
+
 
 
 function start() {
@@ -116,8 +115,6 @@ function viewDepartments() {
         }
 
       });
-      // console.log( departmentsChoices );
-
       inquirer
         .prompt({
           name: "departmentS",
@@ -128,7 +125,7 @@ function viewDepartments() {
         .then(answer => {
 
           // (department.department_id=role.department_id) WHERE department.department_id =?
-          connectionQuery("SELECT name, role.title, role.salary,first_name, last_name FROM department INNER JOIN role ON (department.department_id=role.department_id) INNER JOIN employee ON (role.role_id= employee.role_id) WHERE department.department_id =?", [answer.departmentS], function (err, res) {
+          connectionQuery("SELECT (name) AS Department , role.title, role.salary,CONCAT_WS(', ', first_name, last_name) AS `Full name` FROM department INNER JOIN role ON (department.department_id=role.department_id) INNER JOIN employee ON (role.role_id= employee.role_id) WHERE department.department_id =?", [answer.departmentS], function (err, res) {
             if (err) throw err;
             // Log all results of the SELECT statement
             console.table(res);
@@ -138,21 +135,26 @@ function viewDepartments() {
     });
 }
 function viewEmployees() {
-  connection.query("SELECT * FROM employee", function (err, res) {
+
+
+  // (department.department_id=role.department_id) WHERE department.department_id =?
+  connectionQuery("SELECT CONCAT_WS(', ', first_name, last_name) AS `Full name`, role.title, role.salary, (name ) AS `Department`  FROM department INNER JOIN role ON (department.department_id=role.department_id) INNER JOIN employee ON (role.role_id= employee.role_id) ", function (err, res) {
     if (err) throw err;
     // Log all results of the SELECT statement
     console.table(res);
     start();
   });
+
 }
 function viewRoles() {
-  connection.query("SELECT * FROM role", function (err, res) {
+  // (department.department_id=role.department_id) WHERE department.department_id =?
+  connectionQuery("SELECT (role.title) AS Role, role.salary, (name ) AS `Department`, CONCAT_WS(', ', first_name, last_name) AS `Full name`  FROM department INNER JOIN role ON (department.department_id=role.department_id) INNER JOIN employee ON (role.role_id= employee.role_id) ", function (err, res) {
     if (err) throw err;
     // Log all results of the SELECT statement
     console.table(res);
-
     start();
   });
+
 }
 
 
@@ -184,7 +186,7 @@ function viewEmployeesByManager() {
           choices: managersChoices
         })
         .then(function (answer) {
-          var query = "SELECT first_name, last_name, manager_id, title,  salary FROM employee INNER JOIN role ON (role.role_id = employee.role_id) WHERE manager_id =? ";
+          var query = "SELECT CONCAT_WS(', ', first_name, last_name) AS `Full name`, manager_id, title,  salary FROM employee INNER JOIN role ON (role.role_id = employee.role_id) WHERE manager_id =? ";
           connection.query(query, [parseInt(answer.managerS)], function (err, res) {
             console.table(res);
             start();
@@ -292,7 +294,7 @@ viewDepartmentBudget = () => {
       departments = departmentsData;
 
       let departmentsChoices = departments.map(department => {
-         return {
+        return {
           name: department.name,
           value: department.department_id
         }
