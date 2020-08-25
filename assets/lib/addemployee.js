@@ -4,8 +4,8 @@ var consoleTable = require("table");
 var util = require("util");
 var { promisify } = require("util");
  
-var connectionQuery = require("./config/connection");
-var connection = require("./config/connection");
+var connectionQuery = require("../../config/connection");
+var connection = require("../../config/connection");
 connectionQuery = promisify(connection.query.bind(connection));
  
 
