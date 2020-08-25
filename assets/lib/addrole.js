@@ -5,12 +5,7 @@ var connectionQuery = require("../../config/connection");
 var connection = require("../../config/connection");
 const { isNumber, isString } = require("util");
 connectionQuery = util.promisify(connection.query.bind(connection));
-// start = require("./server");
 var orm = require("../../config/orm");
-// start1 = require("./server");
-// let myServerFile = require ("./server")
-
-var exec = require('child_process').execFile;
 
 module.exports =
 function(start){
@@ -77,9 +72,6 @@ function(start){
                 // console.log("Please run 'node server' for the next operation");
               });
           });
-
-
-
 
       });
   };

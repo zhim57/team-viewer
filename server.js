@@ -220,37 +220,25 @@ deleteDepartmentsRolesEmployees = () => {
 
       let departmentsChoices = departments.map(department => {
         console.log({ department });
-
         return {
           name: department.name,
           value: department.department_id
-
-
         }
-
       });
 
       let rolesChoices = roles.map(role => {
         console.log({ role });
-
         return {
           name: role.title,
           value: role.role_id
-
-
         }
 
       });
       let employeesChoices = employees.map(employee => {
-        // console.log({ employeee });
-
         return {
           name: employee.first_name + " " + employee.last_name,
           value: employee.id
-
-
         }
-
       });
 
       employeesChoices.push(
@@ -262,7 +250,6 @@ deleteDepartmentsRolesEmployees = () => {
       departmentsChoices.push(
         { name: "No Change", value: null }
       );
-
 
       return inquirer.prompt([
         {
@@ -285,20 +272,11 @@ deleteDepartmentsRolesEmployees = () => {
         }
       ])
         .then(response => {
-          // DELETE FROM products WHERE flavor="strawberry"
           console.table({ response });
-
           orm.delEmployee(response.employee);
           orm.delDepartment(response.department);
           orm.delRole(response.role);
           start();
-
-
-
-
-
-
-
         });
     });
 }
@@ -314,14 +292,11 @@ viewDepartmentBudget = () => {
       departments = departmentsData;
 
       let departmentsChoices = departments.map(department => {
-        // console.log({ department });
-        return {
+         return {
           name: department.name,
           value: department.department_id
         }
-
       });
-      // console.log( departmentsChoices );
 
       inquirer
         .prompt({
@@ -347,27 +322,4 @@ viewDepartmentBudget = () => {
 }
 
 
-
-
-
-
-
-
-
-
-
-
 start();
-
-
-
-
-
-
-// orm.selectAllNames("party_name", "parties");
-
-// orm.selectPartiesOfType("party_name", "parties", { party_type: "grown-up" });
-
-// //SELECT party_name, client_name FROM parties INNER JOIN clients ON parties.client_id = clients.id;
-
-// orm.selectClientParties("party_name", "client_name", "parties", "clients", "client_id", "id");
