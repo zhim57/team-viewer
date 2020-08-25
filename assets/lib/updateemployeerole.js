@@ -4,18 +4,10 @@ var consoleTable = require("table");
 var util = require("util");
 var { promisify } = require("util");
 // var managerArr= [];
-var connectionQuery = require("./config/connection");
-var connection = require("./config/connection");
+var connectionQuery = require("../../config/connection");
+var connection = require("../../config/connection");
 const Choices = require("inquirer/lib/objects/choices");
 connectionQuery = util.promisify(connection.query.bind(connection));
-const restartMain = require("./server");
-const server = require("./server.js");
-var start1 = require("./server");
-// const { start } = require("repl");
-// const remoteStart = require("./server");
-
-
-
 
 
 

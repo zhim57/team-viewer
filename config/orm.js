@@ -14,7 +14,7 @@ addDepartment: function (tableInput, valOfCol) {
     var queryString = "INSERT INTO ?? SET name = ?";
     return connectionQuery(queryString, [tableInput, valOfCol])
       .then(function (result) {
-          console.table(result);
+          // console.table(result);
       });
   },
 

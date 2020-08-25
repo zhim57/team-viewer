@@ -1,12 +1,12 @@
 var inquirer = require("inquirer");
 var util = require("util");
 var { promisify } = require("util");
-var connectionQuery = require("./config/connection");
-var connection = require("./config/connection");
+var connectionQuery = require("../../config/connection");
+var connection = require("../../config/connection");
 const { isNumber, isString } = require("util");
 connectionQuery = util.promisify(connection.query.bind(connection));
 // start = require("./server");
-var orm = require("./config/orm");
+var orm = require("../../config/orm");
 // start1 = require("./server");
 // let myServerFile = require ("./server")
 

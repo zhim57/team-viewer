@@ -13,10 +13,10 @@ var connection = require("./config/connection");
 const Choices = require("inquirer/lib/objects/choices");
 connectionQuery = util.promisify(connection.query.bind(connection));
 
-const updateEmployeeRole = require('./updateemployeerole');
-const addEmployee = require('./addemployee');
-const updateEmployeeManager = require('./updateemployeemanager');
-const addRole = require('./addrole');
+const updateEmployeeRole = require('./assets/lib/updateemployeerole');
+const addEmployee = require('./assets/lib/addemployee');
+const updateEmployeeManager = require('./assets/lib/updateemployeemanager');
+const addRole = require('./assets/lib/addrole');
 const { isNumber, isString } = require("util");
 
 
@@ -101,12 +101,41 @@ function addDepartment() {
 };
 
 function viewDepartments() {
-  connection.query("SELECT * FROM department", function (err, res) {
-    if (err) throw err;
-    // Log all results of the SELECT statement
-    console.table(res);
-    start();
-  });
+  let departments;
+
+  return connectionQuery("select * from department")
+    .then(departmentsData => {
+      console.log(departmentsData);
+      departments = departmentsData;
+
+      let departmentsChoices = departments.map(department => {
+        // console.log({ department });
+        return {
+          name: department.name,
+          value: department.department_id,
+        }
+
+      });
+      // console.log( departmentsChoices );
+
+      inquirer
+        .prompt({
+          name: "departmentS",
+          type: "list",
+          message: "Please chose a department to see all employees overseen by him?",
+          choices: departmentsChoices
+        })
+        .then(answer => {
+
+          // (department.department_id=role.department_id) WHERE department.department_id =?
+          connectionQuery("SELECT name, role.title, role.salary,first_name, last_name FROM department INNER JOIN role ON (department.department_id=role.department_id) INNER JOIN employee ON (role.role_id= employee.role_id) WHERE department.department_id =?", [answer.departmentS], function (err, res) {
+            if (err) throw err;
+            // Log all results of the SELECT statement
+            console.table(res);
+            start();
+          });
+        });
+    });
 }
 function viewEmployees() {
   connection.query("SELECT * FROM employee", function (err, res) {
@@ -257,25 +286,25 @@ deleteDepartmentsRolesEmployees = () => {
       ])
         .then(response => {
           // DELETE FROM products WHERE flavor="strawberry"
-console.table( {response}  );
+          console.table({ response });
 
-            orm.delEmployee( response.employee);
-            orm.delDepartment( response.department);
-            orm.delRole( response.role);
-            start();
-        
+          orm.delEmployee(response.employee);
+          orm.delDepartment(response.department);
+          orm.delRole(response.role);
+          start();
 
 
-       
-          
-        
-        
+
+
+
+
+
+        });
     });
-  });
 }
 
 
-viewDepartmentBudget=()=>{
+viewDepartmentBudget = () => {
 
   let departments;
 
@@ -306,11 +335,11 @@ viewDepartmentBudget=()=>{
           connection.query(query, [answer.departmentS], function (err, res) {
             console.log(answer.departmentS);
             console.table(res);
-            let total=0;
-            for (i=0; i<res.length;i++){
-              total+=res[i].salary;
+            let total = 0;
+            for (i = 0; i < res.length; i++) {
+              total += res[i].salary;
             }
-            console.log("The total utilized budget of this department is = $"+total);
+            console.log("The total utilized budget of this department is = $" + total);
             start();
           });
         });
