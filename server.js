@@ -40,8 +40,8 @@ function start() {
     ]
   })
     .then(function (answer) {
+      console.log(answer);
       switch (answer.action) {
-
         case "Add a department":
           addDepartment();
           break;
@@ -80,23 +80,41 @@ function start() {
           viewDepartmentBudget();
           break;
         default:
-          console.log("please try again")
-          start();
+        // console.log("please try again")
+        // start();
 
       }
     });
 }
 
 function addDepartment() {
-  inquirer.prompt({
-    name: "department",
-    type: "input",
-    message: "What department would you like to add?"
-  }).then(function (answer, err) {
-    if (err) throw err;
-    orm.addDepartment("department", answer.department);
-    start();
-  });
+  let departments;
+
+  return connectionQuery("select * from department")
+    .then(departmentsData => {
+      // console.log(departmentsData);
+      departments = departmentsData;
+
+      let departmentsChoices = departments.map(department => {
+        // console.log({ department });
+        return {
+          name: department.name,
+          value: department.department_id,
+        }
+
+      });
+      console.table(departmentsChoices);
+      inquirer.prompt({
+        name: "department",
+        type: "input",
+        message: "Above is the table of current departments, Please enter the new department name."
+      }).then(function (answer, err) {
+        if (err) throw err;
+        orm.addDepartment("department", answer.department);
+        start();
+      });
+    });
+
 };
 
 function viewDepartments() {
@@ -119,7 +137,7 @@ function viewDepartments() {
         .prompt({
           name: "departmentS",
           type: "list",
-          message: "Please chose a department to see all roles and employees working there?",
+          message: "Current departments, Please chose a department to see all roles and employees working there?",
           choices: departmentsChoices
         })
         .then(answer => {
@@ -148,7 +166,7 @@ function viewEmployees() {
 }
 function viewRoles() {
   // (department.department_id=role.department_id) WHERE department.department_id =?
-  connectionQuery("SELECT (role.title) AS Role, role.salary, (name ) AS `Department`, CONCAT_WS(', ', first_name, last_name) AS `Full name`  FROM department INNER JOIN role ON (department.department_id=role.department_id) INNER JOIN employee ON (role.role_id= employee.role_id) ", function (err, res) {
+  connectionQuery("SELECT (role.title) AS Role, role.salary, (name ) AS `Department`, CONCAT_WS(' ', first_name, last_name) AS `Full name`  FROM role LEFT JOIN department ON (department.department_id=role.department_id) LEFT JOIN employee ON (role.role_id= employee.role_id) ", function (err, res) {
     if (err) throw err;
     // Log all results of the SELECT statement
     console.table(res);
