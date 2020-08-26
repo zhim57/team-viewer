@@ -74,7 +74,7 @@ module.exports =
 
                 console.table(res);
                 connection.end();
-                console.log("Please run 'node server' for the next operation");
+                // console.log("Please run 'node server' for the next operation");
                 start();
               });
             });

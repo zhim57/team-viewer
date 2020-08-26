@@ -19,7 +19,7 @@ module.exports =
 
       return connectionQuery("select * from employee")
         .then(managersData => {
-          console.log(managersData);
+          // console.log(managersData);
           managers = managersData;
 
 

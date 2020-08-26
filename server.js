@@ -104,7 +104,7 @@ function viewDepartments() {
 
   return connectionQuery("select * from department")
     .then(departmentsData => {
-      console.log(departmentsData);
+      // console.log(departmentsData);
       departments = departmentsData;
 
       let departmentsChoices = departments.map(department => {
@@ -119,7 +119,7 @@ function viewDepartments() {
         .prompt({
           name: "departmentS",
           type: "list",
-          message: "Please chose a department to see all employees overseen by him?",
+          message: "Please chose a department to see all roles and employees working there?",
           choices: departmentsChoices
         })
         .then(answer => {
@@ -165,7 +165,7 @@ function viewEmployeesByManager() {
 
   return connectionQuery("select * from employee")
     .then(managersData => {
-      console.log(managersData);
+      // console.log(managersData);
       managers = managersData;
 
       let managersChoices = managers.map(manager => {
@@ -221,7 +221,7 @@ deleteDepartmentsRolesEmployees = () => {
 
 
       let departmentsChoices = departments.map(department => {
-        console.log({ department });
+        // console.log({ department });
         return {
           name: department.name,
           value: department.department_id
@@ -229,7 +229,7 @@ deleteDepartmentsRolesEmployees = () => {
       });
 
       let rolesChoices = roles.map(role => {
-        console.log({ role });
+        // console.log({ role });
         return {
           name: role.title,
           value: role.role_id
@@ -290,7 +290,7 @@ viewDepartmentBudget = () => {
 
   return connectionQuery("select * from department")
     .then(departmentsData => {
-      console.log(departmentsData);
+      // console.log(departmentsData);
       departments = departmentsData;
 
       let departmentsChoices = departments.map(department => {
@@ -310,7 +310,7 @@ viewDepartmentBudget = () => {
         .then(function (answer) {
           var query = `SELECT name, title, salary FROM department INNER JOIN role ON (department.department_id=role.department_id) WHERE department.department_id =?`;
           connection.query(query, [answer.departmentS], function (err, res) {
-            console.log(answer.departmentS);
+            // console.log(answer.departmentS);
             console.table(res);
             let total = 0;
             for (i = 0; i < res.length; i++) {
